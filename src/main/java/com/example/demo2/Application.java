@@ -5,23 +5,31 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import java.util.IllegalFormatException;
+
 public class Application extends javafx.application.Application {
+
+    private Canvas canvas;
+    private GraphicsContext gc;
+    private StackPane canvasContainer; //Контейнер для холста
 
     @Override
     public void start(Stage primaryStage) {
 
-        Canvas canvas = new Canvas(500, 500);
-        GraphicsContext gc = canvas.getGraphicsContext2D();
+        canvas = new Canvas(1000, 500);
+        gc = canvas.getGraphicsContext2D();
         clearCanvas(gc);
+
+        canvasContainer = new StackPane(canvas);
+        canvasContainer.setMinSize(1000,500);
 
         TextField centerX_Field = new TextField();
         TextField centerY_Field = new TextField();
@@ -72,8 +80,10 @@ public class Application extends javafx.application.Application {
                 Color color1 = colorPicker1.getValue();
                 Color color2 = colorPicker2.getValue();
 
+                adjustCanvasSize(centerX, centerY, ellipse_a, ellipse_b);
+                clearCanvas(gc);
                 BresenhamAlgorithm.drawFilledEllipse(gc, centerX, centerY, ellipse_a, ellipse_b, color1, color2);
-            } catch (NumberFormatException ex) {
+            } catch (IllegalFormatException ex) {
                 System.out.println("Неверный формат координат.");
             }
         });
@@ -83,10 +93,14 @@ public class Application extends javafx.application.Application {
 
 
         VBox root = new VBox();
-        root.getChildren().addAll(canvas, inputGrid);
+        root.getChildren().addAll(canvasContainer, inputGrid);
+        ScrollPane scrollPane = new ScrollPane(root);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setPannable(true);
 
-
-        Scene scene = new Scene(root, 600, 700);
+        double height = Screen.getPrimary().getBounds().getHeight();
+        double width = Screen.getPrimary().getBounds().getWidth();
+        Scene scene = new Scene(scrollPane, width - 100, height - 100);
         primaryStage.setTitle("Program");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -94,8 +108,22 @@ public class Application extends javafx.application.Application {
 
     private void clearCanvas(GraphicsContext gc) {
         gc.setFill(Color.WHITE);
-        gc.fillRect(0, 0, 500, 500);
+        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         gc.setStroke(Color.BLACK);
+    }
+
+    private void adjustCanvasSize(double centerX, double centerY, double a, double b) {
+        double requiredWidth = centerX + a + 20;
+        double requiredHeight = centerY + b + 20;
+
+        if (requiredWidth > canvas.getWidth() || requiredHeight > canvas.getHeight()) {
+            double newWidth = Math.max(canvas.getWidth(), requiredWidth);
+            double newHeight = Math.max(canvas.getHeight(), requiredHeight);
+            canvas.setWidth(newWidth);
+            canvas.setHeight(newHeight);
+            canvasContainer.setMinSize(newWidth, newHeight);
+            clearCanvas(gc);
+        }
     }
 
 }
