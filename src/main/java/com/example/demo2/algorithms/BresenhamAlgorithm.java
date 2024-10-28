@@ -6,6 +6,8 @@ import javafx.scene.paint.Color;
 
 public class BresenhamAlgorithm {
     public static void drawFilledEllipse(GraphicsContext gc, double centerX, double centerY, double a, double b, Color startColor, Color endColor) {
+        double canvasWidth = gc.getCanvas().getWidth();
+        double canvasHeight = gc.getCanvas().getHeight();
         // Обходим только 1/4 эллипса
         for (double y = 0; y <= b; y++) {
             // Находим границы по x для текущей строки y
@@ -18,11 +20,17 @@ public class BresenhamAlgorithm {
 
                 gc.setFill(interpolateColor);
 
-                gc.fillRect(centerX + x, centerY + y, 1, 1); // нижняя правая четверть
-                gc.fillRect(centerX - x, centerY + y, 1, 1); // нижняя левая четверть
-                gc.fillRect(centerX + x, centerY - y, 1, 1); // верхняя правая четверть
-                gc.fillRect(centerX - x, centerY - y, 1, 1); // верхняя левая четверть
+                drawPoint(gc,centerX + x, centerY + y, canvasWidth, canvasHeight); // нижняя правая четверть
+                drawPoint(gc,centerX - x, centerY + y, canvasWidth, canvasHeight); // нижняя левая четверть
+                drawPoint(gc, centerX + x, centerY - y, canvasWidth, canvasHeight); // верхняя правая четверть
+                drawPoint(gc, centerX - x, centerY - y, canvasWidth, canvasHeight); // верхняя левая четверть
             }
+        }
+    }
+    private static void drawPoint(GraphicsContext gc, double x, double y, double canvasWidth, double canvasHeight) {
+        //Проверяем, что точка лежит внутри холста
+        if (x >= 0 && x < canvasWidth && y >= 0 && y < canvasHeight) {
+            gc.fillRect(x,y,1,1);
         }
     }
     private static Color interpolateColor(Color startColor, Color endColor, double distance, double maxDistance) {
