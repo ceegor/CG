@@ -23,10 +23,10 @@ public class Application extends javafx.application.Application {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         clearCanvas(gc);
 
-        TextField x1Field = new TextField();
-        TextField y1Field = new TextField();
-        TextField x2Field = new TextField();
-        TextField y2Field = new TextField();
+        TextField centerX_Field = new TextField();
+        TextField centerY_Field = new TextField();
+        TextField a = new TextField();
+        TextField b = new TextField();
 
 
         ColorPicker colorPicker1 = new ColorPicker(Color.BLACK);
@@ -40,14 +40,14 @@ public class Application extends javafx.application.Application {
         inputGrid.setHgap(10);
         inputGrid.setVgap(10);
 
-        inputGrid.add(new Label("X1:"), 0, 0);
-        inputGrid.add(x1Field, 1, 0);
-        inputGrid.add(new Label("Y1:"), 2, 0);
-        inputGrid.add(y1Field, 3, 0);
-        inputGrid.add(new Label("X2:"), 0, 1);
-        inputGrid.add(x2Field, 1, 1);
-        inputGrid.add(new Label("Y2:"), 2, 1);
-        inputGrid.add(y2Field, 3, 1);
+        inputGrid.add(new Label("Координата X центра:"), 0, 0);
+        inputGrid.add(centerX_Field, 1, 0);
+        inputGrid.add(new Label("Координата Y центра:"), 2, 0);
+        inputGrid.add(centerY_Field, 3, 0);
+        inputGrid.add(new Label("a:"), 0, 1);
+        inputGrid.add(a, 1, 1);
+        inputGrid.add(new Label("b:"), 2, 1);
+        inputGrid.add(b, 3, 1);
 
         inputGrid.add(new Label("Цвет 1:"), 0, 2);
         inputGrid.add(colorPicker1, 1, 2);
@@ -64,17 +64,17 @@ public class Application extends javafx.application.Application {
 
         drawBresenhamButton.setOnAction(e -> {
             try {
-                int x1 = Integer.parseInt(x1Field.getText());
-                int y1 = Integer.parseInt(y1Field.getText());
-                int x2 = Integer.parseInt(x2Field.getText());
-                int y2 = Integer.parseInt(y2Field.getText());
+                double centerX = Double.parseDouble(centerX_Field.getText());
+                double centerY = Double.parseDouble(centerY_Field.getText());
+                double ellipse_a = Double.parseDouble(a.getText());
+                double ellipse_b = Double.parseDouble(b.getText());
 
                 Color color1 = colorPicker1.getValue();
                 Color color2 = colorPicker2.getValue();
 
-                BresenhamAlgorithm.drawLine(gc, x1, y1, x2, y2, color1, color2);
+                BresenhamAlgorithm.drawFilledEllipse(gc, centerX, centerY, ellipse_a, ellipse_b, color1, color2);
             } catch (NumberFormatException ex) {
-                System.out.println("Неверный формат координат. Введите целые числа.");
+                System.out.println("Неверный формат координат.");
             }
         });
 
