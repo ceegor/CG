@@ -6,21 +6,22 @@ import javafx.scene.paint.Color;
 
 public class BresenhamAlgorithm {
     public static void drawFilledEllipse(GraphicsContext gc, double centerX, double centerY, double a, double b, Color startColor, Color endColor) {
-        double x = 0;
-        double y = b;
-        double a2 = a * a;
-        double b2 = b * b;
-        double d = b2 - a2 * b + a2 / 4;
+        // Обходим только 1/4 эллипса
+        for (double y = 0; y <= b; y++) {
+            // Находим границы по x для текущей строки y
+            double dx = a * Math.sqrt(1 - (y*y)/(b*b));
+            for (double x = 0; x <= dx; x++) {
+                // Интерполируем цвет на основе расстояния от центра
+                double distance = Math.sqrt(x * x + y * y);
+                double maxDistance = Math.sqrt(a * a + b * b);
+                Color interpolateColor = interpolateColor(startColor, endColor, distance, maxDistance);
 
-        while (y >= 0) {
-            drawSymmetricPoints(gc, centerX, centerY, x, y, a, b, startColor, endColor);
+                gc.setFill(interpolateColor);
 
-            if (d < 0) {
-                x++;
-                d += b2 * (2 * x + 1);
-            } else {
-                y--;
-                d -= a2 * (2 * y + 1);
+                gc.fillRect(centerX + x, centerY + y, 1, 1); // нижняя правая четверть
+                gc.fillRect(centerX - x, centerY + y, 1, 1); // нижняя левая четверть
+                gc.fillRect(centerX + x, centerY - y, 1, 1); // верхняя правая четверть
+                gc.fillRect(centerX - x, centerY - y, 1, 1); // верхняя левая четверть
             }
         }
     }
