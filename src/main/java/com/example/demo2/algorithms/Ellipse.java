@@ -4,7 +4,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 
-public class BresenhamAlgorithm {
+public class Ellipse {
     public static void drawFilledEllipse(GraphicsContext gc, double centerX, double centerY, double a, double b, Color startColor, Color endColor) {
         double canvasWidth = gc.getCanvas().getWidth();
         double canvasHeight = gc.getCanvas().getHeight();
@@ -20,10 +20,10 @@ public class BresenhamAlgorithm {
 
                 gc.setFill(interpolateColor);
 
-                drawPoint(gc,centerX + x, centerY + y, canvasWidth, canvasHeight); // нижняя правая четверть
-                drawPoint(gc,centerX - x, centerY + y, canvasWidth, canvasHeight); // нижняя левая четверть
-                drawPoint(gc, centerX + x, centerY - y, canvasWidth, canvasHeight); // верхняя правая четверть
-                drawPoint(gc, centerX - x, centerY - y, canvasWidth, canvasHeight); // верхняя левая четверть
+                drawPoint(gc,centerX + x, centerY + y, canvasWidth, canvasHeight); // Нижняя правая четверть
+                drawPoint(gc,centerX - x, centerY + y, canvasWidth, canvasHeight); // Нижняя левая четверть
+                drawPoint(gc, centerX + x, centerY - y, canvasWidth, canvasHeight); // Верхняя правая четверть
+                drawPoint(gc, centerX - x, centerY - y, canvasWidth, canvasHeight); // Верхняя левая четверть
             }
         }
     }

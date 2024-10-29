@@ -1,6 +1,6 @@
 package com.example.demo2;
 
-import com.example.demo2.algorithms.BresenhamAlgorithm;
+import com.example.demo2.algorithms.Ellipse;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -19,7 +19,7 @@ public class Application extends javafx.application.Application {
 
     private Canvas canvas;
     private GraphicsContext gc;
-    private StackPane canvasContainer; //Контейнер для холста
+    private StackPane canvasContainer;
 
     @Override
     public void start(Stage primaryStage) {
@@ -40,7 +40,7 @@ public class Application extends javafx.application.Application {
         ColorPicker colorPicker1 = new ColorPicker(Color.BLACK);
         ColorPicker colorPicker2 = new ColorPicker(Color.BLACK);
 
-        Button drawBresenhamButton = new Button("Bresenham");
+        Button ellipse = new Button("Нарисовать эллипс");
         Button clearButton = new Button("Очистить холст");
 
         GridPane inputGrid = new GridPane();
@@ -64,13 +64,13 @@ public class Application extends javafx.application.Application {
         inputGrid.add(colorPicker2, 3, 2);
 
 
-        inputGrid.add(drawBresenhamButton, 3, 3, 2, 1);
+        inputGrid.add(ellipse, 3, 3, 2, 1);
         inputGrid.add(clearButton, 1, 5, 2, 1);
 
 
 
 
-        drawBresenhamButton.setOnAction(e -> {
+        ellipse.setOnAction(e -> {
             try {
                 double centerX = Double.parseDouble(centerX_Field.getText());
                 double centerY = Double.parseDouble(centerY_Field.getText());
@@ -82,7 +82,7 @@ public class Application extends javafx.application.Application {
 
                 adjustCanvasSize(centerX, centerY, ellipse_a, ellipse_b);
                 clearCanvas(gc);
-                BresenhamAlgorithm.drawFilledEllipse(gc, centerX, centerY, ellipse_a, ellipse_b, color1, color2);
+                Ellipse.drawFilledEllipse(gc, centerX, centerY, ellipse_a, ellipse_b, color1, color2);
             } catch (IllegalFormatException ex) {
                 System.out.println("Неверный формат координат.");
             }
