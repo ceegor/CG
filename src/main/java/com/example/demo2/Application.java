@@ -41,6 +41,7 @@ public class Application extends javafx.application.Application {
         ColorPicker colorPicker2 = new ColorPicker(Color.BLACK);
 
         Button ellipse = new Button("Нарисовать эллипс");
+        Button ellipseBresenham = new Button("Нарисовать с помощью Брезенхема");
         Button clearButton = new Button("Очистить холст");
 
         GridPane inputGrid = new GridPane();
@@ -65,6 +66,7 @@ public class Application extends javafx.application.Application {
 
 
         inputGrid.add(ellipse, 3, 3, 2, 1);
+        inputGrid.add(ellipseBresenham, 4,3,2,1);
         inputGrid.add(clearButton, 1, 5, 2, 1);
 
 
@@ -83,6 +85,23 @@ public class Application extends javafx.application.Application {
                 adjustCanvasSize(centerX, centerY, ellipse_a, ellipse_b);
                 clearCanvas(gc);
                 Ellipse.drawFilledEllipse(gc, centerX, centerY, ellipse_a, ellipse_b, color1, color2);
+            } catch (IllegalFormatException ex) {
+                System.out.println("Неверный формат координат.");
+            }
+        });
+        ellipseBresenham.setOnAction(e -> {
+            try {
+                int centerX = Integer.parseInt(centerX_Field.getText());
+                int centerY = Integer.parseInt(centerY_Field.getText());
+                int ellipse_a = Integer.parseInt(a.getText());
+                int ellipse_b = Integer.parseInt(b.getText());
+
+                Color color1 = colorPicker1.getValue();
+                Color color2 = colorPicker2.getValue();
+
+                adjustCanvasSize(centerX, centerY, ellipse_a, ellipse_b);
+                clearCanvas(gc);
+                Ellipse.drawFilledBresenhamEllipse(gc, centerX, centerY, ellipse_a, ellipse_b, color1, color2);
             } catch (IllegalFormatException ex) {
                 System.out.println("Неверный формат координат.");
             }
