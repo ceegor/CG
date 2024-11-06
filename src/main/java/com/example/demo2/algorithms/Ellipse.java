@@ -5,6 +5,7 @@ import javafx.scene.paint.Color;
 
 
 public class Ellipse {
+    final static double epsilon = 1e-10;
     public static void drawFilledEllipse(GraphicsContext gc, double centerX, double centerY, double a, double b, Color startColor, Color endColor) {
         double canvasWidth = gc.getCanvas().getWidth();
         double canvasHeight = gc.getCanvas().getHeight();
@@ -13,9 +14,9 @@ public class Ellipse {
             // Находим границы по x для текущей строки y
             double dx = a * Math.sqrt(1 - (y*y)/(b*b));
             for (double x = 0; x <= dx; x++) {
-                // Интерполируем цвет на основе расстояния от центра
-                double distance = Math.sqrt(x * x + y * y);
-                double maxDistance = Math.sqrt(a * a + b * b);
+                double distance = Math.sqrt((x * x) / (a * a) + (y * y) / (b * b));
+                distance = Math.max(0, Math.min(1, distance + epsilon - epsilon));
+                double maxDistance = 1.0;
                 Color interpolateColor = interpolateColor(startColor, endColor, distance, maxDistance);
 
                 gc.setFill(interpolateColor);
@@ -34,7 +35,8 @@ public class Ellipse {
         }
     }
     private static Color interpolateColor(Color startColor, Color endColor, double distance, double maxDistance) {
-        double ratio = distance / maxDistance;
+        double ratio = distance / (maxDistance + epsilon);
+        ratio = Math.max(0, Math.min(1, ratio + epsilon - epsilon));
         double red = startColor.getRed() * (1 - ratio) + endColor.getRed() * ratio;
         double green = startColor.getGreen() * (1 - ratio) + endColor.getGreen() * ratio;
         double blue = startColor.getBlue() * (1 - ratio) + endColor.getBlue() * ratio;
